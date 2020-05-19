@@ -1,11 +1,15 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import Root from "./Root";
-import * as serviceWorker from "./serviceWorker";
+//react imports
+import React from 'react'
+import ReactDOM from 'react-dom'
+import * as serviceWorker from './serviceWorker'
+
+//component imports
+import Root from './Root'
+import Auth from './components/Auth'
 
 //apollo imports
-import { ApolloProvider } from 'react-apollo';
-import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo'
+import ApolloClient from 'apollo-boost'
 
 const client = new ApolloClient({
     uri: 'http://localhost:8000/graphql/'
@@ -13,10 +17,10 @@ const client = new ApolloClient({
 
 ReactDOM.render(
     <ApolloProvider client={client}>
-        <Root />
+        <Auth />
     </ApolloProvider>
     ,
-    document.getElementById("root"));
+    document.getElementById('root'))
 
 
-serviceWorker.unregister();
+serviceWorker.unregister()

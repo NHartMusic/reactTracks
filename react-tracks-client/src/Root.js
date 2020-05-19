@@ -1,9 +1,9 @@
-import React from "react";
-import withRoot from "./withRoot";
+import React from 'react'
+import withRoot from './withRoot'
 
 //apollo imports
-import { Query } from 'react-apollo';
-import { gql } from 'apollo-boost';
+import { Query } from 'react-apollo'
+import { gql } from 'apollo-boost'
 
 const Root = () => (
     <Query query={GET_TRACKS_QUERY}>
@@ -27,4 +27,4 @@ const GET_TRACKS_QUERY = gql`
     }
 `
 
-export default withRoot(Root);
+export default withRoot(Root)

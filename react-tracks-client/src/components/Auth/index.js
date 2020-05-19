@@ -1,7 +1,11 @@
-import React from "react";
+import React from 'react'
 
-import withRoot from "../../withRoot";
+import withRoot from '../../withRoot'
+
+//component imports 
+import Login from './Login'
+import Register from './Register'
 
 export default withRoot(() => {
-  return <div>Auth</div>;
-});
+  return <Register />
+})
