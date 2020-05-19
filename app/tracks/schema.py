@@ -1,6 +1,12 @@
+# graphql imports
 import graphene
 from graphene_django import DjangoObjectType
+from graphql import GraphQLError
 
+#django imports
+from django.db.models import Q
+
+#code imports
 from .models import Track, Like
 from users.schema import UserType
 
@@ -8,11 +14,29 @@ class TrackType(DjangoObjectType):
     class Meta: 
         model = Track
 
-class Query(graphene.ObjectType):
-    tracks = graphene.List(TrackType)
+class LikeType(DjangoObjectType):
+    class Meta:
+        model = Like
 
-    def resolve_tracks(self, info):
+class Query(graphene.ObjectType):
+    tracks = graphene.List(TrackType, search=graphene.String())
+    likes = graphene.List(LikeType)
+
+    def resolve_tracks(self, info, search=None):
+        if search:
+            filter = (
+                Q(title__icontains=search) | 
+                Q(description__icontains=search) |
+                Q(url__icontains=search) |
+                Q(posted_by__username__icontains=search) 
+            )
+
+            return Track.objects.filter(filter)
+
         return Track.objects.all()
+
+    def resolve_likes(self, info):
+        return Like.objects.all()
 
 class CreateTrack(graphene.Mutation):
     track = graphene.Field(TrackType)
@@ -26,7 +50,7 @@ class CreateTrack(graphene.Mutation):
         user = info.context.user 
 
         if user.is_anonymous:
-            raise Exception('You must login to add tracks, you fucking idiot')
+            raise GraphQLError('You must login to add tracks, you fucking idiot')
 
         track = Track(title=title, description=description, url=url, posted_by=user)
         track.save()
@@ -46,7 +70,7 @@ class UpdateTrack(graphene.Mutation):
         track = Track.objects.get(id=track_id)
 
         if track.posted_by != user:
-            raise Exception('This user cannot update this track because this user SUCKS')
+            raise GraphQLError('This user cannot update this track because this user SUCKS')
 
         track.title = title
         track.description = description
@@ -67,7 +91,7 @@ class DeleteTrack(graphene.Mutation):
         track = Track.objects.get(id=track_id)
 
         if track.posted_by != user:
-            raise Exception('You are not allowed to delete this track, you are scum')
+            raise GraphQLError('You are not allowed to delete this track, you are scum')
 
         track.delete()
 
@@ -83,11 +107,11 @@ class CreateLike(graphene.Mutation):
     def mutate(self, info, track_id):
         user = info.context.user
         if user.is_anonymous:
-            raise Exception('You gotta log in to like this track, ya dumbass')
+            raise GraphQLError('You gotta log in to like this track, ya dumbass')
 
         track = Track.objects.get(id=track_id)
         if not track: 
-            raise Exception('Cannot find that track, u sure u got the right id?')
+            raise GraphQLError('Cannot find that track, u sure u got the right id?')
 
         Like.objects.create(
             user=user,
