@@ -35,55 +35,57 @@ const Register = ({ classes }) => {
           Register
         </Typography>
 
-        <Mutation>
-          {() => {
+        {/*<Mutation>
+          {() => { */}
+
             return (
               <form className={classes.form}>
 
-                <FormControl margin='normal' required fullWidth>
-                  <InputLabel htmlFor='username'>
-                    Username
+          <FormControl margin='normal' required fullWidth>
+            <InputLabel htmlFor='username'>
+              Username
                   </InputLabel>
-                  <Input id='username' />
-                </FormControl>
+            <Input id='username' />
+          </FormControl>
 
-                <FormControl margin='normal' required fullWidth>
-                  <InputLabel htmlFor='email'>
-                    Email
+          <FormControl margin='normal' required fullWidth>
+            <InputLabel htmlFor='email'>
+              Email
                   </InputLabel>
-                  <Input id='email' type='email' />
-                </FormControl>
+            <Input id='email' type='email' />
+          </FormControl>
 
-                <FormControl margin='normal' required fullWidth>
-                  <InputLabel htmlFor='password'>
-                    Password
+          <FormControl margin='normal' required fullWidth>
+            <InputLabel htmlFor='password'>
+              Password
                   </InputLabel>
-                  <Input id='password' type='password' />
-                </FormControl>
+            <Input id='password' type='password' />
+          </FormControl>
 
-                <Button
-                  type='submit'
-                  fullWidth
-                  variant='contained'
-                  color='secondary'
-                  className={classes.submit}
-                >
-                  Register
+          <Button
+            type='submit'
+            fullWidth
+            variant='contained'
+            color='secondary'
+            className={classes.submit}
+          >
+            Register
                 </Button>
 
-                <Button
-                  type='submit'
-                  fullWidth
-                  variant='outlined'
-                  color='primary'
-                >
-                  Already Registered? Click here.
+          <Button
+            type='submit'
+            fullWidth
+            variant='outlined'
+            color='primary'
+          >
+            Already Registered? Click here.
                 </Button>
 
-              </form>
-            )
-          }}
-        </Mutation>
+        </form>
+
+        {/* )}}  */}
+
+        {/*</Mutation> */}
 
       </Paper>
     </div>
