@@ -22,10 +22,20 @@ import Slide from '@material-ui/core/Slide'
 import Gavel from '@material-ui/icons/Gavel'
 import VerifiedUserTwoTone from '@material-ui/icons/VerifiedUserTwoTone'
 
-const Register = ({ classes }) => {
+function Transition(props) {
+  return <Slide direction='up' {...props} />
+}
+
+const Register = ({ classes, setNewUser }) => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [open, setOpen] = useState(false)
+
+  const handleSubmit = (event, createUser) => {
+    event.preventDefault()
+    createUser()
+  }
 
   return (
     <div className={classes.root}>
@@ -39,10 +49,17 @@ const Register = ({ classes }) => {
           Register
         </Typography>
 
-        <Mutation mutation={REGISTER_MUTATION}>
-          {() => {
+        <Mutation
+          mutation={REGISTER_MUTATION}
+          variables={{ username, email, password }}
+          onCompleted={data => {
+            console.log(data)
+            setOpen(true)
+          }}
+        >
+          {(createUser, { loading, error }) => {
             return (
-              <form className={classes.form}>
+              <form onSubmit={event => handleSubmit(event, createUser)} className={classes.form}>
 
                 <FormControl margin='normal' required fullWidth>
                   <InputLabel htmlFor='username'>
@@ -70,12 +87,14 @@ const Register = ({ classes }) => {
                   fullWidth
                   variant='contained'
                   color='secondary'
+                  disabled={loading || !username.trim() || !email.trim() || !password.trim()}
                   className={classes.submit}
                 >
-                  Register
+                  {loading ? 'Almost There...' : 'Register'}
                 </Button>
 
                 <Button
+                  onClick={() => setNewUser(false)}
                   type='submit'
                   fullWidth
                   variant='outlined'
@@ -84,6 +103,9 @@ const Register = ({ classes }) => {
                   Already Registered? Click here.
                 </Button>
 
+                {/* Error Handling we handling thangs*/}
+                {error && <div>Error</div>}
+
               </form>
             )
           }}
@@ -91,6 +113,32 @@ const Register = ({ classes }) => {
         </Mutation>
 
       </Paper>
+
+      {/* Success Dialog Let's get some SUCCESS up in this bitch */}
+
+      <Dialog
+        open={open}
+        disablebackdropclick='true'
+        TransitionComponent={Transition}
+      >
+        <DialogTitle>
+          New Account <VerifiedUserTwoTone className={classes.icon} />
+        </DialogTitle>
+
+        <DialogContent>
+          <DialogContentText>User {username} Successfully Created</DialogContentText>
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            color='primary'
+            variant='contained'
+            onClick={() => setNewUser(false)}
+          >
+            Login
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }
