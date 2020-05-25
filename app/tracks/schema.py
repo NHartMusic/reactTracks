@@ -3,10 +3,10 @@ import graphene
 from graphene_django import DjangoObjectType
 from graphql import GraphQLError
 
-#django imports
+# django imports
 from django.db.models import Q
 
-#code imports
+# code imports
 from .models import Track, Like
 from users.schema import UserType
 

@@ -13,6 +13,17 @@ import ApolloClient, { gql } from 'apollo-boost'
 
 const client = new ApolloClient({
     uri: 'http://localhost:8000/graphql/',
+    fetchOptions: {
+        credentials: 'include'
+    },
+    request: operation => {
+        const token = localStorage.getItem('authToken') || ''
+        operation.setContext({
+            headers: {
+                Authorization: `JWT ${token}`
+            }
+        })
+    },
     clientState: {
         defaults: {
             isLoggedIn: !!localStorage.getItem('authToken')
@@ -31,7 +42,6 @@ ReactDOM.render(
         <Query query={IS_LOGGED_IN_QUERY}>
             {({ data }) => data.isLoggedIn ? <Root /> : <Auth />}
         </Query>
-        <Auth />
     </ApolloProvider>,
     document.getElementById('root'))
 
