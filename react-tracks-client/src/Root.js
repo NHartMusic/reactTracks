@@ -1,5 +1,13 @@
 import React from 'react'
+
+//router imports
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+
+//component imports
 import withRoot from './withRoot'
+import App from './pages/App'
+import Profile from './pages/Profile'
+import Header from './components/Shared/Header'
 
 //apollo imports
 import { Query } from 'react-apollo'
@@ -10,8 +18,19 @@ const Root = () => (
         {({ data, loading, error }) => {
             if (loading) return <div>This thang is loading</div>
             if (error) return <div>Something got fucked up</div>
+            const currentUser = data.me
 
-            return <div>{JSON.stringify(data)}</div>
+            return (
+                <Router>
+                    <>
+                        <Header currentUser={currentUser} />
+                        <Switch>
+                            <Route exact path='/' component={App} />
+                            <Route path='/profile/:id' component={Profile} />
+                        </Switch>
+                    </>
+                </Router>
+            )
         }}
     </Query>
 )
