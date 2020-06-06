@@ -27,6 +27,7 @@ const LikeTrack = ({ classes, trackId, likeCount }) => {
       onCompleted={data => {
         console.log({ data })
       }}
+
       refetchQueries={() => [{ query: ME_QUERY }]}
     >
       {createLike => (
